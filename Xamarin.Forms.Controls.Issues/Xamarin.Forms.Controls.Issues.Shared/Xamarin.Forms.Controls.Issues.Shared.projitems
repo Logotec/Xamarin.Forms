@@ -1083,6 +1083,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Github6021.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Issue5132.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Issue5888.cs" />
+	<Compile Include="$(MSBuildThisFileDirectory)Issue5890.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Issue6334.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Issue5728.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Issue6368.cs" />
