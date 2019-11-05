@@ -206,7 +206,11 @@ namespace Xamarin.Forms
 		void IShellController.AddFlyoutBehaviorObserver(IFlyoutBehaviorObserver observer)
 		{
 			_flyoutBehaviorObservers.Add(observer);
-			observer.OnFlyoutBehaviorChanged(GetEffectiveFlyoutBehavior());
+
+			// We need to wait until the visible page has been created before we try to calculate
+			// the flyout behavior
+			if(GetVisiblePage() != null)
+				observer.OnFlyoutBehaviorChanged(GetEffectiveFlyoutBehavior());
 		}
 
 		void IShellController.AppearanceChanged(Element source, bool appearanceSet)
@@ -785,7 +789,7 @@ namespace Xamarin.Forms
 		{
 			base.OnChildAdded(child);
 
-			if (child is ShellItem shellItem && CurrentItem == null && !(child is MenuShellItem))
+			if (child is ShellItem shellItem && CurrentItem == null && ValidDefaultShellItem(child))
 			{
 				((IShellController)this).OnFlyoutItemSelected(shellItem);
 			}
@@ -795,11 +799,21 @@ namespace Xamarin.Forms
 		{
 			base.OnChildRemoved(child);
 
-			if (child == CurrentItem && Items.Count > 0)
+			if (child == CurrentItem)
 			{
-				((IShellController)this).OnFlyoutItemSelected(Items[0]);
+				for (var i = 0; i < Items.Count; i++)
+				{
+					var item = Items[i];
+					if (ValidDefaultShellItem(item))
+					{
+						((IShellController)this).OnFlyoutItemSelected(item);
+						break;
+					}
+				}
 			}
 		}
+
+		bool ValidDefaultShellItem(Element child) => !(child is MenuShellItem);
 
 		internal override IEnumerable<Element> ChildrenNotDrawnByThisElement
 		{
@@ -1019,7 +1033,7 @@ namespace Xamarin.Forms
 
 		void NotifyFlyoutBehaviorObservers()
 		{
-			if (CurrentItem == null)
+			if (CurrentItem == null || GetVisiblePage() == null)
 				return;
 
 			var behavior = GetEffectiveFlyoutBehavior();
@@ -1116,11 +1130,11 @@ namespace Xamarin.Forms
 		{
 			readonly Shell _shell;
 
-			NavigationProxy SectionProxy => _shell.CurrentItem.CurrentItem.NavigationProxy;
+			NavigationProxy SectionProxy => _shell.CurrentItem?.CurrentItem?.NavigationProxy;
 
 			public NavigationImpl(Shell shell) => _shell = shell;
 
-			protected override IReadOnlyList<Page> GetNavigationStack() => SectionProxy.NavigationStack;
+			protected override IReadOnlyList<Page> GetNavigationStack() => SectionProxy?.NavigationStack;
 
 			protected override void OnInsertPageBefore(Page page, Page before) => SectionProxy.InsertPageBefore(page, before);
 
