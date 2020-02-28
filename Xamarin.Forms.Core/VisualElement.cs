@@ -42,6 +42,15 @@ namespace Xamarin.Forms
 			coerceValue: (bindable, value) => double.IsNaN((double)value) ? 0d : value);
 
 		public static readonly BindableProperty HeightProperty = HeightPropertyKey.BindableProperty;
+		
+		// Due to a different coordinate system in macOS, "ParentHeightForMacOS" is required to be passed to VisualElementTracker
+		static readonly BindableProperty ParentHeightForMacOSProperty = BindableProperty.Create("ParentHeightForMacOS", typeof(double), typeof(VisualElement), default(double));
+
+		double ParentHeightForMacOS
+		{
+			get { return (double)GetValue(ParentHeightForMacOSProperty); }
+			set { SetValue(ParentHeightForMacOSProperty, value); }
+		}		
 
 		public static readonly BindableProperty RotationProperty = BindableProperty.Create("Rotation", typeof(double), typeof(VisualElement), default(double));
 
@@ -300,11 +309,19 @@ namespace Xamarin.Forms
 			private set
 			{
 				if (value.X == X && value.Y == Y && value.Height == Height && value.Width == Width)
+				{
+					// Due to a different coordinate system in macOS, "ParentHeightForMacOS' is required to be passed to VisualElementTracker
+					if (Device.RuntimePlatform == Device.macOS)
+						ParentHeightForMacOS = (Parent as VisualElement)?.Height ?? 0;
 					return;
+				}
 				BatchBegin();
 				X = value.X;
 				Y = value.Y;
 				SetSize(value.Width, value.Height);
+				// Due to a different coordinate system in macOS, "ParentHeightForMacOS" is required to be passed to VisualElementTracker
+				if (Device.RuntimePlatform == Device.macOS)
+					ParentHeightForMacOS = (Parent as VisualElement)?.Height ?? 0;
 				BatchCommit();
 			}
 		}
