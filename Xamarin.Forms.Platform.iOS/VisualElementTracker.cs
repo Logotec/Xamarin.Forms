@@ -92,7 +92,9 @@ namespace Xamarin.Forms.Platform.MacOS
 			if (TrackFrame && (e.PropertyName == VisualElement.XProperty.PropertyName ||
 							   e.PropertyName == VisualElement.YProperty.PropertyName ||
 							   e.PropertyName == VisualElement.WidthProperty.PropertyName ||
-							   e.PropertyName == VisualElement.HeightProperty.PropertyName))
+							   e.PropertyName == VisualElement.HeightProperty.PropertyName ||
+							   // Due to a different coordinate system in macOS, "ParentHeightForMacOS" is required to be passed from VisualElement
+							   e.PropertyName == "ParentHeightForMacOS"))
 			{
 				UpdateNativeControl();
 			}
