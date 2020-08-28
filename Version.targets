@@ -41,9 +41,6 @@
       <PackageVersion Condition="$(CI) and '$(GitBaseVersion)' == '4.2.0'">$(GitSemVerMajor).$(GitSemVerMinor).$(GitBaseVersionPatch).$(BUILDVERSION42)$(GitSemVerDashLabel)$(VersionMetadataPlusLabel)</PackageVersion>
       <PackageVersion Condition="$(CI) and '$(GitBaseVersion)' == '4.3.0'">$(GitSemVerMajor).$(GitSemVerMinor).$(GitBaseVersionPatch).$(BUILDVERSION43)$(GitSemVerDashLabel)$(VersionMetadataPlusLabel)</PackageVersion>
       <PackageVersion Condition="$(CI) and '$(GitBaseVersion)' == '4.4.0'">$(GitSemVerMajor).$(GitSemVerMinor).$(GitBaseVersionPatch).$(BUILDVERSION44)$(GitSemVerDashLabel)$(VersionMetadataPlusLabel)</PackageVersion>
-
-      <!-- poprawa dla Logotec -->
-      <PackageVersion Condition="$(CI)">$(GitSemVerMajor).$(GitSemVerMinor).$(GitBaseVersionPatch)$(GitSemVerDashLabel)$(VersionMetadataPlusLabel)</PackageVersion>
     </PropertyGroup>
 
     <PropertyGroup>
