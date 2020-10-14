@@ -281,7 +281,7 @@ namespace Xamarin.Forms.Platform.MacOS
 
 				// macOS - ma przycinac
 				////otherwise scaled/rotated image clipped by parent bounds
-				//caLayer.MasksToBounds = false;
+				caLayer.MasksToBounds = true;
 #endif
 				caLayer.AnchorPoint = new PointF(anchorX, anchorY);
 				caLayer.Opacity = opacity;
